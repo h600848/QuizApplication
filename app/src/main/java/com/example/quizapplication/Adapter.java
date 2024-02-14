@@ -13,27 +13,25 @@ import java.util.ArrayList;
 public class Adapter extends BaseAdapter {
 
     Context context;
-    ArrayList<String> listAnimals;
-    ArrayList<Integer> listImages;
+    ArrayList<Animal> animals;
     LayoutInflater inflater;
 
     // Konstruktør for adapteren
-    public Adapter(Context ctx, ArrayList<String> animalList, ArrayList<Integer> images) {
+    public Adapter(Context ctx, ArrayList<Animal> animals) {
         this.context = ctx;
-        this.listAnimals = animalList;
-        this.listImages = images;
+        this.animals = animals;
         inflater = LayoutInflater.from(ctx);
     }
 
     @Override
     public int getCount() {
-        return listAnimals.size();
+        return animals.size();
     }
 
     @Override
     public Object getItem(int position) {
         // Returnerer objektet på angitte posisjonen
-        return listAnimals.get(position);
+        return animals.get(position);
     }
 
     @Override
@@ -47,8 +45,9 @@ public class Adapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.activity_custom_list_view, null);
         TextView txtView = (TextView) convertView.findViewById(R.id.textView);
         ImageView animalImg = (ImageView) convertView.findViewById(R.id.imageView);
-        txtView.setText(listAnimals.get(position));
-        animalImg.setImageResource(listImages.get(position));
+        Animal animal = animals.get(position);
+        txtView.setText(animal.getName());
+        animalImg.setImageResource(animal.getImageId());
         return convertView;
     }
 }

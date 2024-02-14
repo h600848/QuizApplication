@@ -8,13 +8,10 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class GalleryActivity extends AppCompatActivity {
-    ArrayList<String> animalList = new ArrayList<>(Arrays.asList("Polar bear", "Gorilla"));
-    ArrayList<Integer> animalImages = new ArrayList<>(Arrays.asList(R.drawable.polar_bear, R.drawable.gorilla));
-
+    ArrayList<Animal> animals = new ArrayList<>();
     // Deklarerer ListView som klassevariabel
     ListView listView;
     // Deklarerer Adapter som klassevariabel
@@ -27,9 +24,13 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
+        // Legger til start bilder
+        animals.add(new Animal("Polar bear", R.drawable.polar_bear));
+        animals.add(new Animal("Gorilla", R.drawable.gorilla));
+
         // Finner listView, oppretter adapteren og bruker listView på adapteren
         listView = (ListView) findViewById(R.id.customListView);
-        adapter = new Adapter(getApplicationContext(), animalList, animalImages);
+        adapter = new Adapter(getApplicationContext(), animals);
         listView.setAdapter(adapter);
 
         // Setter opp itemlytter på listView for å kunne slette bilder når vi trykker på bildet(itemet)
@@ -50,14 +51,12 @@ public class GalleryActivity extends AppCompatActivity {
         // Setter opp klikkelytter på sort knappen
         sort.setOnClickListener(v -> {
             if (isSortedAscending) {
-                // Sorterer listen i synkende rekkefølge
-                Collections.sort(animalList, Collections.reverseOrder());
-                Collections.sort(animalImages,Collections.reverseOrder());
+                // Sorterer listen i stigende rekkefølge
+                Collections.sort(animals, (x1, x2) -> x1.getName().compareTo(x2.getName()));
                 isSortedAscending = false;
             } else {
-                // Sorterer listen i stigende rekkefølge
-                Collections.sort(animalList);
-                Collections.sort(animalImages);
+                // Sorterer listen i synkende rekkefølge
+                Collections.sort(animals, (x1, x2) -> x2.getName().compareTo(x1.getName()));
                 isSortedAscending = true;
             }
             // Oppdaterer adapteren
@@ -73,8 +72,7 @@ public class GalleryActivity extends AppCompatActivity {
         builder.setMessage("Are you sure you want to delete the picture?");
         builder.setPositiveButton("Delete", (dialog, which) -> {
             // Sletter elementet fra listen
-            animalList.remove(position);
-            animalImages.remove(position);
+            animals.remove(position);
             // Oppdaterer adapteren
             adapter.notifyDataSetChanged();
         });
