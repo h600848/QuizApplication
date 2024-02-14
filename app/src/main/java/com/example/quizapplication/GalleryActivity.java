@@ -3,14 +3,19 @@ package com.example.quizapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class GalleryActivity extends AppCompatActivity {
+    // Liste med animals
     ArrayList<Animal> animals = new ArrayList<>();
     // Deklarerer ListView som klassevariabel
     ListView listView;
@@ -18,6 +23,8 @@ public class GalleryActivity extends AppCompatActivity {
     Adapter adapter;
     // Deklarerer boolsk variabel for å holde styr på stigende eller synktende rekkefølge
     private boolean isSortedAscending = true;
+    // Lager en konstant for å identifisere resultatet fra bildevalg aktiviteten.
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +32,8 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
 
         // Legger til start bilder
-        animals.add(new Animal("Polar bear", R.drawable.polar_bear));
-        animals.add(new Animal("Gorilla", R.drawable.gorilla));
+        animals.add(new Animal("Polar bear", Uri.parse("content://com.example.quizapplication/polar_bear")));
+        animals.add(new Animal("Gorilla", Uri.parse("content://com.example.quizapplication/gorilla")));
 
         // Finner listView, oppretter adapteren og bruker listView på adapteren
         listView = (ListView) findViewById(R.id.customListView);
@@ -45,7 +52,9 @@ public class GalleryActivity extends AppCompatActivity {
 
         // Setter opp klikkelytter på add knappen
         add.setOnClickListener(v -> {
-            // Må her implementere logikken til knappen
+            // Bruker intent for å la brukeren velge et bilde fra mobilen
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(intent, PICK_IMAGE_REQUEST);
         });
 
         // Setter opp klikkelytter på sort knappen
@@ -80,5 +89,29 @@ public class GalleryActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    // Metode for å håndtere resultatet fra bildevalg aktiviteten.
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri selectedImageUri = data.getData();
+
+            // Ber brukeren om et navn til bildet
+            final EditText input = new EditText(this);
+            new AlertDialog.Builder(this)
+                    .setTitle("Add a name for the picture")
+                    .setView(input)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        String name = input.getText().toString();
+                        // Legger til det nye bildet med bildets URI
+                        animals.add(new Animal(name, selectedImageUri));
+                        adapter.notifyDataSetChanged();
+                    })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        }
     }
 }

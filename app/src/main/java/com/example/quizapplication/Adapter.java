@@ -45,9 +45,13 @@ public class Adapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.activity_custom_list_view, null);
         TextView txtView = (TextView) convertView.findViewById(R.id.textView);
         ImageView animalImg = (ImageView) convertView.findViewById(R.id.imageView);
+
         Animal animal = animals.get(position);
         txtView.setText(animal.getName());
-        animalImg.setImageResource(animal.getImageId());
+        if (animal.getImageUri() != null) {
+            animalImg.setImageURI(animal.getImageUri());
+        }
+
         return convertView;
     }
 }
