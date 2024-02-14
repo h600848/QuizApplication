@@ -32,8 +32,8 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
 
         // Legger til start bilder
-        animals.add(new Animal("Polar bear", Uri.parse("content://com.example.quizapplication/polar_bear")));
-        animals.add(new Animal("Gorilla", Uri.parse("content://com.example.quizapplication/gorilla")));
+        animals.add(new Animal("Polar bear", Animal.getDrawableUri(getApplicationContext(), R.drawable.polar_bear)));
+        animals.add(new Animal("Gorilla", Animal.getDrawableUri(getApplicationContext(), R.drawable.gorilla)));
 
         // Finner listView, oppretter adapteren og bruker listView på adapteren
         listView = (ListView) findViewById(R.id.customListView);
