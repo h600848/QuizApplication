@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">QuizApplication</string>
+
+    <!--Main Activity -->
+    <string name="gallery_button">Gallery</string>
+    <string name="quiz_button">Quiz</string>
+    <string name="info_text">Quiz application</string>
+
+    <!--Gallery Activity -->
+    <string name="add_button">Add picture</string>
+    <string name="sort_button">Sort pictures</string>
+</resources>
