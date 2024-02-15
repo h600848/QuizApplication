@@ -5,7 +5,10 @@
     <!-- Ber om tillatelse for å få tilgang til brukerens lagringsområder for å velge bilder -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
+    <!-- Legger til linjen android:name=".MyApp" -->
     <application
+        android:name=".MyApp"
+
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"

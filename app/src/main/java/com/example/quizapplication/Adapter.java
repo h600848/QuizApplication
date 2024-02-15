@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class Adapter extends BaseAdapter {
@@ -42,14 +44,25 @@ public class Adapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = inflater.inflate(R.layout.activity_custom_list_view, null);
-        TextView txtView = (TextView) convertView.findViewById(R.id.textView);
-        ImageView animalImg = (ImageView) convertView.findViewById(R.id.imageView);
+        // Sjekk om den gjenbrukbare visningen er null. Hvis den er det, blås den opp.
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.activity_custom_list_view, parent, false);
+        }
+
+        TextView txtView = convertView.findViewById(R.id.textView);
+        ImageView animalImg = convertView.findViewById(R.id.imageView);
 
         Animal animal = animals.get(position);
         txtView.setText(animal.getName());
+
+        // Bruker Glide for å laste inn bildet fra URI
         if (animal.getImageUri() != null) {
-            animalImg.setImageURI(animal.getImageUri());
+            Glide.with(context)
+                    .load(animal.getImageUri())
+                    .into(animalImg);
+        } else {
+            // Håndter tilfeller hvor det kanskje ikke er en bilde-URI
+            // For eksempel, sett et standardbilde eller la bildet være tomt
         }
 
         return convertView;

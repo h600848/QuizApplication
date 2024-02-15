@@ -16,7 +16,7 @@ import java.util.Collections;
 
 public class GalleryActivity extends AppCompatActivity {
     // Liste med animals
-    ArrayList<Animal> animals = new ArrayList<>();
+    ArrayList<Animal> animals;
     // Deklarerer ListView som klassevariabel
     ListView listView;
     // Deklarerer Adapter som klassevariabel
@@ -31,9 +31,9 @@ public class GalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
 
-        // Legger til start bilder
-        animals.add(new Animal("Polar bear", Animal.getDrawableUri(getApplicationContext(), R.drawable.polar_bear)));
-        animals.add(new Animal("Gorilla", Animal.getDrawableUri(getApplicationContext(), R.drawable.gorilla)));
+        // Hent listen fra tilpassey MyApp-klasse
+        MyApp app = (MyApp) getApplicationContext();
+        animals = app.getAnimals();
 
         // Finner listView, oppretter adapteren og bruker listView på adapteren
         listView = (ListView) findViewById(R.id.customListView);
@@ -113,5 +113,16 @@ public class GalleryActivity extends AppCompatActivity {
                     .setNegativeButton("Cancel", null)
                     .show();
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Lagrer listen over dyr når aktiviteten pauser
+        saveAnimals();
+    }
+
+    private void saveAnimals() {
+        ((MyApp) getApplication()).setAnimals(animals);
     }
 }
